@@ -8,7 +8,7 @@ my_deck = []
 # ok heres where the class actually starts 
 
 class CardDeck:
-
+#appending the cards, their images, and integers to a list so i can access the cards and their elements in my main class 
     def __init__(self, num, imglink):
         self.num = num
         self.imglink = imglink
