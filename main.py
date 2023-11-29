@@ -86,12 +86,14 @@ def update(screen, fstring):
 def win_button(screen): 
   update(screen, "You Won!")
 
-
 def lose_button(screen): 
   update(screen, "You Lost!")
 
 def tie_button(screen) : 
   update(screen, "You Tied!")
+  
+def blank_button(screen):
+    update(screen, 'Click')
   
 #_________________________________________________________________
 # ...
@@ -106,16 +108,25 @@ round_outcome = None
 
 #update  
 running = True
+
+
 while running:
-    for event in pygame.event.get(): 
-        if event.type == pygame.QUIT: 
-            running = False 
-
+    
+    
+    for event in pygame.event.get():
+        if event.type == pygame.QUIT:
+            running = False
+        elif event.type == pygame.MOUSEBUTTONDOWN and clicked == False:
+            clicked = True
+            cover = False
+        elif event.type == pygame.KEYDOWN and event.key == pygame.K_SPACE:
+            clicked = False
+            cover = True
+            round_outcome = None
+            
     key = pygame.key.get_pressed()
- 
-    screen.fill((20, 137, 40)) 
-    pygame.display.update() 
-
+        
+    screen.fill((20, 137, 40))
     # Draw all elements
     # Update everything here
     screen.blit(cover_One, (270, 150))
@@ -129,20 +140,17 @@ while running:
         screen.blit(text_surface, (100,50))
         screen.blit(text_surface_2, (500,355))
         screen.blit(text_surface_1, (320,355))
+        
 
     if not clicked:
+    
         rand_Blit_1 = random.choice(my_deck)
         rand_Blit_2 = random.choice(my_deck)
         current_Card_1 = rand_Blit_1.imglink
         current_Card_2 = rand_Blit_2.imglink
 
     # if your number is bigger, smaller, or the same, correlating it to the expected outcome
-    if rand_Blit_1.num > rand_Blit_2.num:
-          round_outcome = ROUND_OUTCOME_WIN
-    elif rand_Blit_1.num < rand_Blit_2.num:
-           round_outcome = ROUND_OUTCOME_LOSE
-    else:
-        round_outcome = ROUND_OUTCOME_TIE
+
 
     # displaying round outcome on the screen
     if round_outcome == ROUND_OUTCOME_WIN:
@@ -151,6 +159,8 @@ while running:
         lose_button(screen)
     elif round_outcome == ROUND_OUTCOME_TIE:
         tie_button(screen)
+    elif round_outcome == None:
+        blank_button(screen)
 
     ## if you click then the card covers will disappera 
     if event.type == pygame.MOUSEBUTTONDOWN and clicked == False: 
@@ -158,13 +168,22 @@ while running:
         cover = False 
 
     if clicked:
+        current_Card_1 = current_Card_1 = rand_Blit_1.imglink
+        current_Card_2 = current_Card_2 = rand_Blit_2.imglink
         screen.blit(current_Card_1, (290, 190))
         screen.blit(current_Card_2, (500, 182))
 
-     # cards disappear when you press space key
-    if key[pygame.K_SPACE]: 
-        clicked = False  
+        if rand_Blit_1.num > rand_Blit_2.num:
+            round_outcome = ROUND_OUTCOME_WIN
+        elif rand_Blit_1.num < rand_Blit_2.num:
+            round_outcome = ROUND_OUTCOME_LOSE
+        elif rand_Blit_1.num == rand_Blit_2.num: 
+            round_outcome = ROUND_OUTCOME_TIE
+        else:
+            round_outcome = None
 
+     # cards disappear when you press space key
+ 
     pygame.display.update() 
     clock.tick(60)
 
